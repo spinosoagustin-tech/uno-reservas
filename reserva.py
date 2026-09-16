@@ -188,40 +188,40 @@ while True:
         except:
             print(r.text)
 
-if r.status_code == 200:
-
-    print("\n✅ RESERVA EXITOSA")
-
-    enviar_telegram(
-        f"✅ RESERVA EXITOSA\n\n"
-        f"Actividad: {ACTIVIDAD}\n"
-        f"Hora: {HORA}\n"
-        f"Latencia: {latencia} ms"
-    )
-
-elif r.status_code == 409:
-
-    print(
-        "\n⚠️ Ya tenías la reserva o la clase se completó"
-    )
-
-    enviar_telegram(
-        f"❌ No se pudo reservar\n\n"
-        f"Actividad: {ACTIVIDAD}\n"
-        f"Hora: {HORA}"
-    )
-
-else:
-
-    print("\n❌ Error inesperado")
-
-    enviar_telegram(
-        f"❌ Error inesperado\n\n"
-        f"Actividad: {ACTIVIDAD}\n"
-        f"Hora: {HORA}\n"
-        f"Status: {r.status_code}"
-    )
-
-break
+        if r.status_code == 200:
+        
+            print("\n✅ RESERVA EXITOSA")
+        
+            enviar_telegram(
+                f"✅ RESERVA EXITOSA\n\n"
+                f"Actividad: {ACTIVIDAD}\n"
+                f"Hora: {HORA}\n"
+                f"Latencia: {latencia} ms"
+            )
+        
+        elif r.status_code == 409:
+        
+            print(
+                "\n⚠️ Ya tenías la reserva o la clase se completó"
+            )
+        
+            enviar_telegram(
+                f"❌ No se pudo reservar\n\n"
+                f"Actividad: {ACTIVIDAD}\n"
+                f"Hora: {HORA}"
+            )
+        
+        else:
+        
+            print("\n❌ Error inesperado")
+        
+            enviar_telegram(
+                f"❌ Error inesperado\n\n"
+                f"Actividad: {ACTIVIDAD}\n"
+                f"Hora: {HORA}\n"
+                f"Status: {r.status_code}"
+            )
+        
+        break
 
 time.sleep(0.2)
