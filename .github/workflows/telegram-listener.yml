@@ -57,22 +57,24 @@ jobs:
             print("Hora:", hora)
             
             github_token = os.environ["GITHUB_TOKEN_PAT"]
-            
-            requests.post(
-                "https://api.github.com/repos/spinosoagustin-tech/uno-reservas/actions/workflows/reserva.yml/dispatches",
-                headers={
-                    "Authorization": f"Bearer {github_token}",
-                    "Accept": "application/vnd.github+json"
-                },
-                json={
-                    "ref": "main",
-                    "inputs": {
-                        "actividad": actividad,
-                        "hora": hora
-                    }
-                }
-            )
-            
-            print("Workflow lanzado")
-
-          EOF
+                              
+                  respuesta = requests.post(
+                      "https://api.github.com/repos/spinosoagustin-tech/uno-reservas/actions/workflows/reserva.yml/dispatches",
+                      headers={
+                          "Authorization": f"Bearer {github_token}",
+                          "Accept": "application/vnd.github+json"
+                      },
+                      json={
+                          "ref": "main",
+                          "inputs": {
+                              "actividad": actividad,
+                              "hora": hora
+                          }
+                      }
+                  )
+                  
+                  print("Status:", respuesta.status_code)
+                  print("Respuesta:")
+                  print(respuesta.text)          
+                
+                EOF
