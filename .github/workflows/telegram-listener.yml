@@ -49,9 +49,29 @@ jobs:
 
           if len(partes) >= 3:
 
-              actividad = partes[1].upper()
-              hora = partes[2]
+            actividad = partes[1].upper()
+            hora = partes[2]
+            
+            print("Actividad:", actividad)
+            print("Hora:", hora)
+            
+            github_token = os.environ["GITHUB_TOKEN_PAT"]
+            
+            requests.post(
+                "https://api.github.com/repos/spinosoagustin-tech/uno-reservas/actions/workflows/reserva.yml/dispatches",
+                headers={
+                    "Authorization": f"Bearer {github_token}",
+                    "Accept": "application/vnd.github+json"
+                },
+                json={
+                    "ref": "main",
+                    "inputs": {
+                        "actividad": actividad,
+                        "hora": hora
+                    }
+                }
+            )
+            
+            print("Workflow lanzado")
 
-              print("Actividad:", actividad)
-              print("Hora:", hora)
           EOF
