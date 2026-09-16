@@ -26,5 +26,10 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+          
+          ACTIVIDAD: GAP
+          HORA: "14:40"
+          
         run: |
           python reserva.py
