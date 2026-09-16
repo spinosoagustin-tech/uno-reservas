@@ -25,7 +25,7 @@ jobs:
       - name: Verificar Telegram
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          GITHUB_TOKEN_PAT: ${{ secrets.GITHUB_TOKEN_PAT }}
+          GITHUB_TOKEN_PAT: ${{ secrets.TOKEN_GITHUB_PAT }}
         run: |
           python - << 'EOF'
           import requests
