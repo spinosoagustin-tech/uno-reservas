@@ -1,0 +1,40 @@
+name: Telegram Listener
+
+on:
+  schedule:
+    - cron: '* * * * *'
+
+  workflow_dispatch:
+
+jobs:
+  escuchar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar requests
+        run: pip install requests
+
+      - name: Verificar Telegram
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          python - << 'EOF'
+          import requests
+          import os
+
+          token = os.environ["BOT_TOKEN"]
+
+          r = requests.get(
+              f"https://api.telegram.org/bot{token}/getUpdates"
+          )
+
+          print(r.json())
+          EOF
