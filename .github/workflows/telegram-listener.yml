@@ -36,5 +36,22 @@ jobs:
               f"https://api.telegram.org/bot{token}/getUpdates"
           )
 
-          print(r.json())
+          datos = r.json()
+
+          ultimo = datos["result"][-1]
+
+          texto = ultimo["message"]["text"]
+
+          print("Mensaje recibido:")
+          print(texto)
+
+          partes = texto.split()
+
+          if len(partes) >= 3:
+
+              actividad = partes[1].upper()
+              hora = partes[2]
+
+              print("Actividad:", actividad)
+              print("Hora:", hora)
           EOF
