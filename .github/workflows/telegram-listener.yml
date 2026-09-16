@@ -50,12 +50,15 @@ jobs:
 
           if len(partes) >= 3:
 
-            actividad = partes[1].upper()
-            hora = partes[2]
-            
+            hora = partes[-1]
+
+            actividad = " ".join(
+              partes[1:-1]
+            ).upper()
+
             print("Actividad:", actividad)
             print("Hora:", hora)
-            
+                        
             github_token = os.environ["GITHUB_TOKEN_PAT"]
                               
             respuesta = requests.post(
