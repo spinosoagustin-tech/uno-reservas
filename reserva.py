@@ -11,8 +11,8 @@ from datetime import datetime
 EMAIL = os.environ["EMAIL"]
 PASSWORD = os.environ["PASSWORD"]
 
-ACTIVIDAD = "PILATES"
-HORA = "16:45"
+ACTIVIDAD = "GAP"
+HORA = "14:40"
 
 # ==========================
 # LOGIN AUTOMÁTICO
