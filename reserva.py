@@ -223,4 +223,5 @@ else:
     )
 
 break
-    time.sleep(0.2)
+
+time.sleep(0.2)
