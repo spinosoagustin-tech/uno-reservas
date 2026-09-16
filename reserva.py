@@ -10,9 +10,21 @@ from datetime import datetime
 
 EMAIL = os.environ["EMAIL"]
 PASSWORD = os.environ["PASSWORD"]
+TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
+TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 
 ACTIVIDAD = "GAP"
 HORA = "14:40"
+
+def enviar_telegram(mensaje):
+
+    requests.post(
+        f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+        json={
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": mensaje
+        }
+    )
 
 # ==========================
 # LOGIN AUTOMÁTICO
@@ -38,6 +50,10 @@ if "IsessionId" not in s.cookies.get_dict():
     raise Exception("❌ No se obtuvo IsessionId")
 
 print("✅ Login exitoso")
+
+enviar_telegram(
+    "✅ GitHub logró ejecutar reserva.py"
+)
 
 # ==========================
 # BUSCAR CLASE
