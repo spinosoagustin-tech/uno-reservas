@@ -1,14 +1,15 @@
 import requests
 import time
 import re
+import os
 from datetime import datetime
 
 # ==========================
 # CONFIGURACIÓN
 # ==========================
 
-EMAIL = ""
-PASSWORD = ""
+EMAIL = os.environ["EMAIL"]
+PASSWORD = os.environ["PASSWORD"]
 
 ACTIVIDAD = "PILATES"
 HORA = "16:45"
