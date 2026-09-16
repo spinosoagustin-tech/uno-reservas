@@ -2,7 +2,16 @@ name: Turnos Uno Bahia
 
 on:
   workflow_dispatch:
+    inputs:
+      actividad:
+        description: "Actividad"
+        required: true
+        default: "GAP"
 
+      hora:
+        description: "Hora"
+        required: true
+        default: "14:40"
 jobs:
   reservar:
     runs-on: ubuntu-latest
@@ -28,8 +37,8 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
           
-          ACTIVIDAD: GAP
-          HORA: "14:40"
+          ACTIVIDAD: ${{ github.event.inputs.actividad }}
+          HORA: ${{ github.event.inputs.hora }}
           
         run: |
           python reserva.py
