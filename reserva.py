@@ -2,7 +2,8 @@ import requests
 import time
 import re
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 # ==========================
 # CONFIGURACIÓN
@@ -15,6 +16,10 @@ TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 
 ACTIVIDAD = os.environ["ACTIVIDAD"]
 HORA = os.environ["HORA"]
+ZONA_ARG = ZoneInfo("America/Argentina/Buenos_Aires")
+
+def ahora_arg():
+    return datetime.now(ZONA_ARG)
 
 
 def enviar_telegram(mensaje):
@@ -101,44 +106,100 @@ print("Estado:", objetivo["reservableData"]["message"])
 # ESPERA PREVIA
 # ==========================
 #
-# Si faltan más de 5 minutos,
-# esperamos hasta llegar aproximadamente
-# a los últimos 5 minutos.
-#
-# Si ya faltan 5 minutos o menos,
-# entramos directamente en modo agresivo.
+# El modo agresivo comienza
+# aproximadamente 5 minutos
+# antes de que se habilite.
 # ==========================
 
 mensaje = objetivo["reservableData"]["message"]
 
 if objetivo["reservableData"]["reservable"] == 0:
 
-    minutos_match = re.search(
-        r"(\d+)\s+minutos?",
-        mensaje
+    segundos_espera = None
+
+    # Caso 1:
+    # "Reservable a partir de 14:45"
+
+    hora_match = re.search(
+        r"Reservable a partir de\s+(\d{1,2}):(\d{2})",
+        mensaje,
+        re.IGNORECASE
     )
 
-    if minutos_match:
+    if hora_match:
 
-        minutos = int(
-            minutos_match.group(1)
+        hora_apertura = int(hora_match.group(1))
+        minuto_apertura = int(hora_match.group(2))
+
+        ahora = ahora_arg()
+
+        apertura = ahora.replace(
+            hour=hora_apertura,
+            minute=minuto_apertura,
+            second=0,
+            microsecond=0
         )
 
-        if minutos > 5:
+        # Si la hora indicada ya pasó hoy,
+        # interpretamos que corresponde al día siguiente.
+        if apertura <= ahora:
+            apertura += timedelta(days=1)
 
-            segundos = (minutos - 5) * 60
+        inicio_agresivo = apertura - timedelta(minutes=5)
 
-            print(
-                f"\n😴 Faltan aproximadamente {minutos} minutos."
+        segundos_espera = (
+            inicio_agresivo - ahora
+        ).total_seconds()
+
+        print(
+            f"\n🕐 Hora actual ARG: "
+            f"{ahora.strftime('%H:%M:%S')}"
+        )
+
+        print(
+            f"🎯 Apertura informada: "
+            f"{apertura.strftime('%H:%M:%S')}"
+        )
+
+        print(
+            f"🚀 Modo agresivo programado para: "
+            f"{inicio_agresivo.strftime('%H:%M:%S')}"
+        )
+
+    # Caso 2:
+    # "Faltan 20 minutos"
+
+    else:
+
+        minutos_match = re.search(
+            r"(\d+)\s+minutos?",
+            mensaje
+        )
+
+        if minutos_match:
+
+            minutos = int(
+                minutos_match.group(1)
             )
 
-            print(
-                f"Esperando {segundos} segundos "
-                f"antes de entrar en modo agresivo..."
-            )
+            if minutos > 5:
+                segundos_espera = (
+                    minutos - 5
+                ) * 60
 
-            time.sleep(segundos)
+    # Esperar solamente si corresponde
 
+    if (
+        segundos_espera is not None
+        and segundos_espera > 0
+    ):
+
+        print(
+            f"😴 Esperando aproximadamente "
+            f"{round(segundos_espera)} segundos..."
+        )
+
+        time.sleep(segundos_espera)
 
 # ==========================
 # MODO AGRESIVO
@@ -161,7 +222,7 @@ while True:
     mensaje = detalle["reservableData"]["message"]
 
     print(
-        datetime.now().strftime("%H:%M:%S.%f")[:-3],
+        ahora_arg().strftime("%H:%M:%S.%f")[:-3],
         "|",
         mensaje
     )
@@ -170,7 +231,7 @@ while True:
 
         print("\n🔥 ¡SE HABILITÓ!")
 
-        fecha_url = datetime.now().strftime(
+        fecha_url = ahora_arg().strftime(
             "%a %b %d %Y %H:%M:%S GMT-0300"
         )
 
@@ -181,7 +242,7 @@ while True:
 
         payload = {
             "horario_id": horario_id,
-            "fecha": datetime.now().isoformat()
+            "fecha": ahora_arg().isoformat()
         }
 
         inicio = time.time()
