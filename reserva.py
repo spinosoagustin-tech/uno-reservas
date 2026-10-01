@@ -16,6 +16,7 @@ TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 ACTIVIDAD = os.environ["ACTIVIDAD"]
 HORA = os.environ["HORA"]
 
+
 def enviar_telegram(mensaje):
 
     requests.post(
@@ -25,6 +26,7 @@ def enviar_telegram(mensaje):
             "text": mensaje
         }
     )
+
 
 # ==========================
 # LOGIN AUTOMÁTICO
@@ -57,6 +59,7 @@ enviar_telegram(
     f"Hora: {HORA}"
 )
 
+
 # ==========================
 # BUSCAR CLASE
 # ==========================
@@ -80,8 +83,10 @@ for clase in horarios:
         objetivo = clase
         break
 
+
 if objetivo is None:
     raise Exception("❌ No encontré la clase")
+
 
 horario_id = objetivo["id"]
 
@@ -91,10 +96,17 @@ print("Actividad:", objetivo["actividades"]["nombre"])
 print("Hora:", objetivo["desde"])
 print("Estado:", objetivo["reservableData"]["message"])
 
+
 # ==========================
-# SI FALTAN MUCHOS MINUTOS,
-# DORMIR HASTA 10 SEGUNDOS
-# ANTES DE LA APERTURA
+# ESPERA PREVIA
+# ==========================
+#
+# Si faltan más de 5 minutos,
+# esperamos hasta llegar aproximadamente
+# a los últimos 5 minutos.
+#
+# Si ya faltan 5 minutos o menos,
+# entramos directamente en modo agresivo.
 # ==========================
 
 mensaje = objetivo["reservableData"]["message"]
@@ -112,21 +124,28 @@ if objetivo["reservableData"]["reservable"] == 0:
             minutos_match.group(1)
         )
 
-        if minutos > 1:
+        if minutos > 5:
 
-            segundos = minutos * 60 - 10
+            segundos = (minutos - 5) * 60
 
             print(
                 f"\n😴 Faltan aproximadamente {minutos} minutos."
             )
 
             print(
-                f"Esperando {segundos} segundos antes de entrar en modo agresivo..."
+                f"Esperando {segundos} segundos "
+                f"antes de entrar en modo agresivo..."
             )
 
             time.sleep(segundos)
 
+
+# ==========================
+# MODO AGRESIVO
+# ==========================
+
 print("\n🚀 Modo agresivo activado")
+
 
 # ==========================
 # ESPERA ACTIVA
@@ -189,39 +208,37 @@ while True:
             print(r.text)
 
         if r.status_code == 200:
-        
+
             print("\n✅ RESERVA EXITOSA")
-        
+
             enviar_telegram(
                 f"✅ RESERVA EXITOSA\n\n"
                 f"Actividad: {ACTIVIDAD}\n"
                 f"Hora: {HORA}\n"
                 f"Latencia: {latencia} ms"
             )
-        
+
         elif r.status_code == 409:
-        
+
             print(
                 "\n⚠️ Ya tenías la reserva o la clase se completó"
             )
-        
+
             enviar_telegram(
                 f"❌ No se pudo reservar\n\n"
                 f"Actividad: {ACTIVIDAD}\n"
                 f"Hora: {HORA}"
             )
-        
+
         else:
-        
+
             print("\n❌ Error inesperado")
-        
+
             enviar_telegram(
                 f"❌ Error inesperado\n\n"
                 f"Actividad: {ACTIVIDAD}\n"
                 f"Hora: {HORA}\n"
                 f"Status: {r.status_code}"
             )
-        
-        break
 
-time.sleep(0.2)
+        break
