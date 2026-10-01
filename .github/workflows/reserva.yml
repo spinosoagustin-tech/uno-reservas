@@ -41,4 +41,4 @@ jobs:
           HORA: ${{ github.event.inputs.hora }}
           
         run: |
-          python reserva.py
+          python -u reserva.py
