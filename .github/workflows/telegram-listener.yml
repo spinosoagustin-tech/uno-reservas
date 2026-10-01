@@ -46,12 +46,25 @@ jobs:
 
           datos = r.json()
 
+          if not datos["result"]:
+            print("No hay mensajes nuevos.")
+            raise SystemExit(0)
+
           ultimo = datos["result"][-1]
 
+          update_id = ultimo["update_id"]
           texto = ultimo["message"]["text"]
 
           print("Mensaje recibido:")
           print(texto)
+
+          # Confirmar el mensaje para no volver a procesarlo
+          requests.get(
+            f"https://api.telegram.org/bot{token}/getUpdates",
+            params={
+              "offset": update_id + 1
+            }
+          )
 
           partes = texto.split()
 
