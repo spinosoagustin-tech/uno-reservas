@@ -2,14 +2,9 @@ name: Telegram Listener
 
 on:
   schedule:
-    # 07:00 a 12:00 ARG - dos veces por hora
-    - cron: '12,42 10-14 * * *'
-
-    # 12:00 a 19:00 ARG - cada 15 minutos
-    - cron: '7,22,37,52 15-21 * * *'
-
-    # 19:00 a 21:00 ARG - dos veces por hora
-    - cron: '12,42 22-23 * * *'
+    # Lunes a sábado - cada 30 minutos
+    # 08:15 a 19:45 (hora Argentina)
+    - cron: '15,45 11-22 * * 1-6'
 
   workflow_dispatch:
 
