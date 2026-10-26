@@ -4,7 +4,7 @@ on:
   schedule:
     # Lunes a sábado - cada 30 minutos
     # 08:15 a 19:45 (hora Argentina)
-    - cron: '15,45 11-22 * * 1-6'
+    - cron: '15,45 8-20 * * 1-6'
 
   workflow_dispatch:
 
