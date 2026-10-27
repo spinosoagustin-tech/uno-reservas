@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 EMAIL = os.environ["EMAIL"]
 PASSWORD = os.environ["PASSWORD"]
 TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
-TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
+TELEGRAM_CHAT_ID = os.environ["CHAT_ID"]
 
 ACTIVIDAD = os.environ["ACTIVIDAD"]
 HORA = os.environ["HORA"]
