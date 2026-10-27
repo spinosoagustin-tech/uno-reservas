@@ -50,6 +50,10 @@ jobs:
           update_id = ultimo["update_id"]
           texto = ultimo["message"]["text"]
 
+          chat_id = ultimo["message"]["chat"]["id"]
+
+          print("Chat ID:", chat_id)
+
           print("Mensaje recibido:")
           print(texto)
 
