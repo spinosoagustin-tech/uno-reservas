@@ -90,7 +90,8 @@ jobs:
                     "ref": "main",
                     "inputs": {
                         "actividad": actividad,
-                        "hora": hora
+                        "hora": hora,
+                        "chat_id": str(chat_id)
                     }
                 }
             )
