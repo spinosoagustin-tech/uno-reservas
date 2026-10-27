@@ -12,6 +12,11 @@ on:
         description: "Hora"
         required: true
         default: "14:40"
+
+      chat_id:
+        description: "Telegram Chat ID"
+        required: true
+        
 jobs:
   reservar:
     runs-on: ubuntu-latest
@@ -39,6 +44,7 @@ jobs:
           
           ACTIVIDAD: ${{ github.event.inputs.actividad }}
           HORA: ${{ github.event.inputs.hora }}
+          CHAT_ID: ${{ github.event.inputs.chat_id }}
           
         run: |
           python -u reserva.py
